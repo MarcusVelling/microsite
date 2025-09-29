@@ -1,0 +1,485 @@
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Umbraco.Core.Models.PublishedContent
+@{
+    Layout = null;
+    var pageTitle = Model.Value("title", fallback: Fallback.ToDefaultValue, defaultValue: Model.Name);
+    var pageDesc  = Model.Value<string>("metaDescription");
+}
+<!doctype html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name" class="microsite">
+<head>
+  <meta charset="utf-8" />
+  <title>@pageTitle</title>
+  <meta name="description" content="@pageDesc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- GTM -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M4CJXSTK');</script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Microsite styles (scoped) -->
+  <style>
+    /* ---------- reset and box-sizing ---------- */
+    *,*::before,*::after{box-sizing:border-box}
+
+    /* ---------- core layout and variables ---------- */
+    :root{
+      /* BV palette */
+      --bv-navy:        #000A35;
+      --bv-dark-blue:   #0B4EA2;
+      --bv-light-blue:  #E2E3E4;
+      --bv-blue:        #007DB7;
+      --bv-light-blue2: #ACE0F3;
+      --bv-grey:        #C9D1DB;
+      --bv-white:       #FFFFFF;
+
+      /* spacing */
+      --space-s: 12px;
+      --space-m: 24px;
+      --space-l: 48px;
+      --space-xl: 80px;
+
+      /* hero defaults */
+      --hero-title-size: 60px;
+      --hero-title-line: 1;
+      --hero-title-weight: 400;
+      --hero-title-color: var(--bv-light-blue2);
+      --hero-sub-size: 18px;
+      --hero-sub-color: var(--bv-light-blue);
+      --hero-media-height: 520px;
+      --hero-media-rad: 12px;
+
+      /* industries defaults */
+      --inds-bg: #0b1c3a;
+      --inds-overlay-alpha: 0.12;
+
+      /* services defaults */
+      --svc-gap: 28px;
+      --svc-thumb-h: 180px;
+      --svc-thumb-h-sm: 160px;
+      --svc-thumb-h-xs: 180px;
+    }
+
+    /* ---------- scoped microsite base ---------- */
+    html.microsite, .microsite {
+      font-family:var(--font-body);
+      color:var(--bv-grey);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .microsite main{display:block}
+    .microsite .container{max-width:var(--container);margin:0 auto;padding:0 16px}
+
+    /* headings */
+    .microsite h1,.microsite h2,.microsite h3,.microsite h4,.microsite h5,.microsite h6{font-family:var(--font-heading);margin:0}
+
+    /* utilities */
+    .microsite .pad-section{padding:var(--space-xl) 0}
+    .microsite .pad-section-s{padding:var(--space-l) 0}
+    .microsite .pad-section-l{padding:calc(var(--space-xl) + 40px) 0}
+    .microsite .text-center{text-align:center}
+    .microsite .text-right{text-align:right}
+    .microsite .text-left{text-align:left}
+
+    /* smooth scroll offset and reveal base */
+    html.microsite { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    html.microsite section[id] { scroll-margin-top: 80px; }
+
+    @@media (max-width:900px){
+      html.microsite { scroll-padding-top: 64px; }
+      html.microsite section[id] { scroll-margin-top: 64px; }
+    }
+
+    /* reveal animation defaults */
+    .microsite .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+    .microsite .reveal.is-visible{opacity:1;transform:none}
+    .microsite .reveal[data-reveal="up"]{transform:translateY(16px)}
+    .microsite .reveal[data-reveal="down"]{transform:translateY(-16px)}
+    .microsite .reveal[data-reveal="left"]{transform:translateX(16px)}
+    .microsite .reveal[data-reveal="right"]{transform:translateX(-16px)}
+    .microsite .reveal[data-reveal="zoom"]{transform:scale(.96)}
+    .microsite [data-reveal-stagger] > .reveal{transition-delay:var(--reveal-delay,0ms)}
+
+    /* focus outline */
+    .microsite a:focus, .microsite button:focus, .microsite input:focus, .microsite textarea:focus, .microsite .svc__title:focus{
+      outline:3px solid rgba(67,169,219,.18);
+      outline-offset:2px;
+    }
+
+    /* ---------- hero ---------- */
+    .microsite .hero{position:relative; overflow:visible; isolation:isolate}
+    .microsite .hero--blue{background:linear-gradient(180deg,#000A35 0%,#43A9DB 100%)}
+    .microsite .hero__inner{padding:48px 16px 24px; max-width:var(--container); margin:0 auto}
+    .microsite .hero__title{
+      font-family:var(--font-heading);
+      font-weight:var(--hero-title-weight);
+      font-size:var(--hero-title-size);
+      line-height:var(--hero-title-line);
+      margin:0 0 40px;
+      color:var(--hero-title-color);
+      white-space:normal;
+    }
+    .microsite .hero__subtitle{
+      font-family:var(--font-body);
+      font-weight:300;
+      font-size:16px;
+      color:var(--hero-sub-color);
+      margin:0 0 60px;
+    }
+
+    /* media and carousel */
+    .microsite .hero__mediawrap{position:relative; height:var(--hero-media-height); border-radius:var(--hero-media-rad); overflow:hidden; background:var(--bv-navy)}
+    .microsite .hero__media{width:100%; height:100%; object-fit:cover; display:block}
+
+    .microsite .hero-carousel{width:100%; height:100%; position:relative}
+    .microsite .hero-carousel__track{display:flex; height:100%; transition:transform .4s ease}
+    .microsite .hero-carousel__slide{min-width:100%; height:100%}
+    .microsite .hero-carousel__slide img{width:100%; height:100%; object-fit:cover; display:block}
+
+    /* carousel controls */
+    .microsite .hc-btn{position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.35); color:#fff; border:0; border-radius:9999px; width:40px; height:40px; cursor:pointer; z-index:60}
+    .microsite .hc-prev{left:12px} .microsite .hc-next{right:12px}
+    .microsite .hc-dots{position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:8px; z-index:60}
+    .microsite .hc-dot{width:10px; height:10px; border:0; border-radius:50%; background:rgba(255,255,255,.5); cursor:pointer}
+    .microsite .hc-dot.is-active{background:#fff}
+
+    /* hero overlays */
+    .microsite .hero__ov{position:absolute; display:block; pointer-events:none; user-select:none; z-index:40;
+      top:var(--ov-top,8%);
+      right:var(--ov-right,-5%);
+      left:var(--ov-left,auto);
+      bottom:var(--ov-bottom,auto);
+      width:var(--ov-width,35%);
+      max-width:none; height:auto;
+      opacity:var(--ov-opacity,1);
+      transform-origin:var(--ov-origin,center);
+      transform:translate(var(--ov-tx,0%),var(--ov-ty,0%)) scale(var(--ov-scale,1)) rotate(var(--ov-rot,0deg));
+    }
+    .microsite .hero__ov--1{ --ov-top:8%;  --ov-right:-5%;  --ov-width:35% }
+    .microsite .hero__ov--2{ --ov-top:28%; --ov-right:-12%; --ov-width:48%; --ov-opacity:.85 }
+    .microsite .hero__ov--spill{ --ov-right:6%; --ov-bottom:-18%; --ov-width:32%; z-index:50 }
+
+    /* hero about */
+    .microsite .hero__about{ padding-top:100px; padding-right:250px; padding-bottom:120px; padding-left:250px; }
+    .microsite .hero__about-inner{ color:#e6edf6 }
+    .microsite .hero__about-title{ color:#fff; font-size:28px; margin:0 0 12px; font-family:var(--font-heading) }
+    .microsite .hero__about-grid{ display:grid; grid-template-columns:2fr 1fr; gap:75px }
+    .microsite .hero__about-col{ font-family:var(--font-body) }
+    .microsite .hero__about-col p{ margin:0 0 10px }
+
+    /* hero responsive */
+    @@media (max-width:900px){
+      html.microsite, .microsite { --hero-title-size:40px; }
+      .microsite .hero__about{ padding-left:24px; padding-right:24px }
+      .microsite .hero__about-grid{ grid-template-columns:1fr }
+    }
+    @@media (max-width:760px){
+      .microsite .hero__title{ font-size:34px }
+      .microsite .hero__mediawrap{ height:360px }
+      .microsite .hero__ov, .microsite .hero__ov--spill{ display:none }
+    }
+
+    /* ---------- industries ---------- */
+    .microsite .inds{ position:relative; overflow:hidden; padding:56px 0; color:#eaf2ff; background:var(--inds-bg) }
+    .microsite .inds__overlay{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:var(--inds-overlay-alpha) }
+    .microsite .inds__inner{ position:relative }
+    .microsite .inds__header{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; margin-bottom:20px }
+    .microsite .inds__h2{ margin:0; font-size:28px; color:#cfe5ff }
+    .microsite .inds__note{ margin:0; justify-self:end; max-width:420px; opacity:.9 }
+
+    .microsite .inds__list{ columns:3; column-gap:48px; list-style-type:disc; margin:0; padding-left:1.1rem }
+    .microsite .inds__list li{ break-inside:avoid; margin:8px 0; color:#f4f8ff }
+
+    @@media (max-width:1100px){ .microsite .inds__list{ columns:2 } }
+    @@media (max-width:720px){
+      .microsite .inds__header{ grid-template-columns:1fr }
+      .microsite .inds__note{ justify-self:start }
+      .microsite .inds__list{ columns:1 }
+    }
+
+    /* ---------- services ---------- */
+    .microsite .svc{ padding:48px 0 }
+    .microsite .svc__h2{ font-size:28px; margin:0 0 16px; color:var(--bv-blue) }
+    .microsite .svc__intro{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin:0 0 24px }
+    .microsite .svc__intro-col{ font-size:14px; line-height:1.6; color:var(--bv-grey) }
+
+    .microsite .svc__grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--svc-gap) }
+    .microsite .svc__card{ display:flex; flex-direction:column }
+    .microsite .svc__media{ border-radius:8px; overflow:hidden; background:var(--bv-light-blue2) }
+    .microsite .svc__thumb{ display:block }
+    .microsite .svc__thumb img{ width:100%; height:var(--svc-thumb-h); object-fit:cover; display:block }
+
+    .microsite .svc__meta{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; border-bottom:2px solid var(--bv-grey); padding-bottom:8px }
+    .microsite .svc__title{ font-weight:600; font-size:16px; color:#163558; background:none; border:0; padding:0; text-align:left; cursor:pointer; text-decoration:none }
+    .microsite .svc__title:hover{ text-decoration:underline }
+    .microsite .svc__gallery-btn{ width:28px; height:28px; border-radius:50%; border:1px solid #9cc7ea; background:#fff; color:#163558; cursor:pointer }
+
+    .microsite .svc__hidden{ display:none }
+    .microsite .svc__card.is-hidden{ display:none }
+    .microsite .svc__grid.is-expanded .svc__card.is-hidden{ display:flex }
+
+    .microsite .svc__more{ text-align:center; margin-top:16px }
+    .microsite .svc__more-btn{ display:inline-block; padding:8px 16px; border-radius:20px; border:1px solid #163558; color:#163558; text-decoration:none }
+
+    @@media (max-width:1100px){ .microsite .svc__grid{ grid-template-columns:repeat(3,1fr) } }
+    @@media (max-width:820px){
+      .microsite .svc__intro{ grid-template-columns:1fr }
+      .microsite .svc__grid{ grid-template-columns:repeat(2,1fr) }
+      .microsite .svc__thumb img{ height:var(--svc-thumb-h-sm) }
+    }
+    @@media (max-width:520px){
+      .microsite .svc__grid{ grid-template-columns:1fr }
+      .microsite .svc__thumb img{ height:var(--svc-thumb-h-xs) }
+    }
+
+    /* visually-hidden helper */
+    .microsite .visually-hidden{ position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; border:0; padding:0; margin:-1px }
+
+    /* ---------- contact ---------- */
+    .microsite .contact__wrap{
+      display:grid;
+      grid-template-columns:1fr 2fr;
+      gap:40px;
+      align-items:start;
+    }
+    .microsite .contact .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px 24px;
+    }
+    .microsite .contact .grid textarea{grid-column:1 / -1}
+
+    .microsite .contact .grid input,
+    .microsite .contact .grid textarea{
+      width:100%;
+      padding:10px;
+      border:0;
+      border-bottom:2px solid #2a7fbe;
+      background:transparent;
+      outline:none;
+    }
+    .microsite .contact .grid input:focus,
+    .microsite .contact .grid textarea:focus{ border-bottom-color:#0b4ea2; }
+
+    .microsite .contact .btn{
+      margin-top:16px;
+      padding:10px 16px;
+      border:0;
+      background:#0b4ea2;
+      color:#fff;
+      border-radius:20px;
+      cursor:pointer;
+    }
+
+    @@media (max-width:900px){
+      .microsite .contact__wrap{grid-template-columns:1fr}
+      .microsite .contact .grid{grid-template-columns:1fr}
+    }
+
+    /* ---------- header micro nav + clients ---------- */
+    .microsite .micro-header{background:#fff;position:relative}
+    .microsite .micro-header__inner{max-width:var(--container);margin:0 auto;padding:14px 8px 14px 16px;display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:64px}
+    .microsite .micro-logo{display:block;height:40px}
+    .microsite .micro-nav{justify-self:end;display:flex;gap:36px;justify-content:flex-end}
+    .microsite .micro-link{font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--bv-blue);text-decoration:none}
+    .microsite .micro-link:focus,.microsite .micro-link:hover{color:var(--bv-dark-blue)}
+
+    @@media (min-width:1400px){ .microsite .micro-header__inner{column-gap:80px} }
+
+    @@media (min-width:1200px){
+      .microsite .micro-nav{gap:42px}
+    }
+
+    .microsite .clients__title{margin:0 0 var(--space-m);font-size:28px}
+    .microsite .clients__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:32px 48px;align-items:center;margin:0;padding:0;list-style:none}
+    .microsite .clients__img{max-width:160px;max-height:56px;object-fit:contain;filter:grayscale(100%);opacity:.85;transition:filter .2s,opacity .2s,transform .2s}
+    .microsite .clients__img:hover{filter:none;opacity:1;transform:scale(1.03)}
+
+    /* ---------- case studies (new) ---------- */
+    .microsite .cs{ background:#e9eef3; padding:56px 0 }
+    .microsite .cs__title{ margin:0 0 24px; font-size:28px; color:#0f2747 }
+
+    .microsite .cs__slider{ position:relative }
+    .microsite .cs__nav{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:44px; height:44px; border-radius:9999px;
+      background:#fff; border:1px solid #cfd8e3; cursor:pointer;
+      display:grid; place-items:center; box-shadow:0 2px 10px rgba(0,0,0,.06)
+    }
+    .microsite .cs__prev{ left:-20px }
+    .microsite .cs__next{ right:-20px }
+
+    .microsite .cs__track{ list-style:none; margin:0; padding:0 }
+    .microsite .cs__slide{ display:none }
+    .microsite .cs__slide.is-active{ display:block }
+
+    .microsite .cs__card{
+      display:grid; grid-template-columns:1.1fr 1.4fr;
+      background:#fff; border-radius:12px; overflow:hidden;
+      box-shadow:0 4px 18px rgba(0,0,0,.06)
+    }
+    .microsite .cs__left{ padding:28px 28px 32px; border-right:1px solid #e6edf5 }
+    .microsite .cs__right{ min-height:360px }
+    .microsite .cs__hero{ width:100%; height:100%; max-height:560px; object-fit:cover; display:block }
+
+    .microsite .cs__label{
+      font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+      color:#6b829f; margin:0 0 4px
+    }
+    .microsite .cs__client{ margin:0 0 12px; font-size:22px; color:#0f2747 }
+    .microsite .cs__logo{ max-width:160px; height:auto; margin:6px 0 16px; object-fit:contain; display:block }
+
+    .microsite .cs__grid{ display:grid; grid-template-columns:1fr; gap:12px }
+    .microsite .cs__val{ color:#163a61; line-height:1.5 }
+    .microsite .cs__service .cs__val{ line-height:1.45 }
+
+    .microsite .cs__galleryBtn{
+      margin-top:18px; background:none; border:0; padding:0;
+      color:#0b4ea2; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px; text-decoration:none
+    }
+    .microsite .cs__galleryBtn::after{ content:"\2192"; font-size:18px; line-height:1 }
+
+    @@media (max-width:900px){
+      .microsite .cs__card{ grid-template-columns:1fr }
+      .microsite .cs__left{ border-right:0; border-bottom:1px solid #e6edf5 }
+      .microsite .cs__nav{ top:auto; bottom:-44px; transform:none }
+      .microsite .cs__prev{ left:0 } .microsite .cs__next{ right:0 }
+    }
+
+    /* ---------- statement band ---------- */
+    .microsite .sb{position:relative;overflow:hidden}
+    .microsite .sb__overlay{position:absolute;inset:0;background:linear-gradient(90deg, rgba(2,16,45,.95) 0%, rgba(5,46,92,.85) 60%, rgba(5,46,92,.80) 100%)}
+    .microsite .sb__inner{position:relative;padding:64px 0}
+    .microsite .sb__text{max-width:760px;margin:0;color:#eaf3ff;font-size:28px;line-height:1.35}
+
+    @@media (max-width:900px){ .microsite .sb__text{font-size:22px} .microsite .sb__inner{padding:44px 0} }
+
+/* Footer */
+.microsite .site-footer{background:#e9eef3;padding:48px 0;color:#5f7390}
+.microsite .site-footer a{color:#5f7390;text-decoration:none}
+.microsite .site-footer a:hover{color:var(--bv-dark-blue)}
+
+.microsite .site-footer .site-footer__inner{
+  max-width:var(--container);margin:0 auto;padding:0 16px;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px
+}
+
+/* left */
+.microsite .site-footer__left{display:flex;align-items:center;gap:28px}
+.microsite .site-footer__brand img{height:44px;width:auto;display:block}
+.microsite .site-footer__contact{display:flex;gap:28px;flex-wrap:wrap;font-size:14px}
+
+/* center nav */
+.microsite .site-footer__nav ul{list-style:none;margin:0;padding:0;display:flex;gap:28px;justify-content:center}
+.microsite .site-footer__nav a{
+  font-family:var(--font-heading);font-size:12px;letter-spacing:.16em;text-transform:uppercase
+}
+
+/* right */
+.microsite .site-footer__right{text-align:right}
+.microsite .site-footer__links{display:flex;gap:24px;justify-content:flex-end;margin-bottom:6px}
+.microsite .site-footer__links a{font-size:12px}
+.microsite .site-footer__legal small{display:block;font-size:12px;opacity:.9}
+.microsite .site-footer__credit a{font-size:12px}
+
+/* responsive */
+@@media (max-width:900px){
+  .microsite .site-footer .site-footer__inner{grid-template-columns:1fr;gap:20px;text-align:center}
+  .microsite .site-footer__left{justify-content:center}
+  .microsite .site-footer__right{text-align:center}
+  .microsite .site-footer__links{justify-content:center}
+  .microsite .site-footer__nav ul{flex-wrap:wrap;gap:18px}
+}
+
+
+    /* end of microsite CSS */
+  </style>
+</head>
+
+<body>
+  <!-- GTM noscript -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M4CJXSTK"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <main class="container">
+    @RenderBody()
+  </main>
+
+  <!-- Smooth scroll and reveal (scoped) -->
+  <script>
+  (function(){
+    var root = document.querySelector('.microsite');
+    if(!root) return;
+
+    var header = root.querySelector('.site-header') || document.querySelector('.site-header');
+    function headerOffset(){ return header ? header.offsetHeight : 80; }
+
+    function goTo(hash, smooth){
+      try {
+        var el = hash && (root.querySelector(hash) || document.querySelector(hash));
+        if(!el) return;
+        var y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset();
+        window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
+        el.setAttribute('tabindex','-1');
+        el.focus({ preventScroll: true });
+      } catch(err){}
+    }
+
+    document.addEventListener('click', function(e){
+      var a = e.target.closest('a');
+      if(!a || !root.contains(a)) return;
+      var href = a.getAttribute('href');
+      if(!href) return;
+      try {
+        var url = new URL(href, location.href);
+        var samePage = (url.origin === location.origin && url.pathname === location.pathname);
+        if(url.hash && samePage){
+          e.preventDefault();
+          var smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+          goTo(url.hash, smooth);
+          history.replaceState(null, '', url.hash);
+        }
+      } catch(err){}
+    });
+
+    if(location.hash){
+      setTimeout(function(){ goTo(location.hash, false); }, 10);
+    }
+
+    var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reveals = Array.prototype.slice.call(root.querySelectorAll('.reveal'));
+    if(!reveals.length) return;
+
+    if(prefersReduced){
+      reveals.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+
+    root.querySelectorAll('[data-reveal-stagger]').forEach(function(parent){
+      var step = parseInt(parent.getAttribute('data-reveal-stagger'), 10) || 100;
+      var kids = parent.querySelectorAll('.reveal');
+      kids.forEach(function(k, i){ k.style.setProperty('--reveal-delay', (i * step) + 'ms'); });
+    });
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          if(entry.target.getAttribute('data-reveal-repeat') !== 'true'){ io.unobserve(entry.target); }
+        }
+      });
+    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+    reveals.forEach(function(el){ io.observe(el); });
+  })();
+  </script>
+</body>
+</html>
