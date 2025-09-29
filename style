@@ -118,19 +118,20 @@
     .microsite .hero--blue{background:linear-gradient(180deg,#000A35 0%,#43A9DB 100%)}
     .microsite .hero__inner{padding:48px 16px 24px; max-width:var(--container); margin:0 auto}
     .microsite .hero__title{
-      font-family:var(--font-heading);
-      font-weight:var(--hero-title-weight);
-      font-size:var(--hero-title-size);
-      line-height:var(--hero-title-line);
+      font-family:'Raleway',sans-serif;
+      font-weight:600;
+      font-size:60px;
+      line-height:1;
       margin:0 0 40px;
-      color:var(--hero-title-color);
+      color:var(--bv-light-blue2);
       white-space:normal;
     }
     .microsite .hero__subtitle{
-      font-family:var(--font-body);
+      font-family:'Inter',sans-serif;
       font-weight:300;
-      font-size:16px;
-      color:var(--hero-sub-color);
+      font-size:25px;
+      line-height:1.4;
+      color:var(--bv-light-blue);
       margin:0 0 60px;
     }
 
@@ -169,10 +170,10 @@
     /* hero about */
     .microsite .hero__about{ padding-top:100px; padding-right:250px; padding-bottom:120px; padding-left:250px; }
     .microsite .hero__about-inner{ color:#e6edf6 }
-    .microsite .hero__about-title{ color:#fff; font-size:28px; margin:0 0 12px; font-family:var(--font-heading) }
+    .microsite .hero__about-title{ font-family:'Raleway',sans-serif; font-weight:500; font-size:28px; color:var(--bv-white); margin:0 0 12px }
     .microsite .hero__about-grid{ display:grid; grid-template-columns:2fr 1fr; gap:75px }
-    .microsite .hero__about-col{ font-family:var(--font-body) }
-    .microsite .hero__about-col p{ margin:0 0 10px }
+    .microsite .hero__about-col{ font-family:'Inter',sans-serif; font-size:18px; line-height:1.5; color:var(--bv-white) }
+    .microsite .hero__about-col p{ margin:0 0 10px; color:inherit }
 
     /* hero responsive */
     @@media (max-width:900px){
@@ -191,11 +192,11 @@
     .microsite .inds__overlay{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:var(--inds-overlay-alpha) }
     .microsite .inds__inner{ position:relative }
     .microsite .inds__header{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; margin-bottom:20px }
-    .microsite .inds__h2{ margin:0; font-size:28px; color:#cfe5ff }
-    .microsite .inds__note{ margin:0; justify-self:end; max-width:420px; opacity:.9 }
+    .microsite .inds__h2{ margin:0; font-family:'Raleway',sans-serif; font-weight:500; font-size:28px; color:var(--bv-light-blue2) }
+    .microsite .inds__note{ margin:0; justify-self:end; max-width:420px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.5; color:var(--bv-light-blue2) }
 
     .microsite .inds__list{ columns:3; column-gap:48px; list-style-type:disc; margin:0; padding-left:1.1rem }
-    .microsite .inds__list li{ break-inside:avoid; margin:8px 0; color:#f4f8ff }
+    .microsite .inds__list li{ break-inside:avoid; margin:8px 0; font-family:'Inter',sans-serif; font-weight:400; font-size:25px; line-height:1.4; color:var(--bv-white) }
 
     @@media (max-width:1100px){ .microsite .inds__list{ columns:2 } }
     @@media (max-width:720px){
@@ -206,9 +207,9 @@
 
     /* ---------- services ---------- */
     .microsite .svc{ padding:48px 0 }
-    .microsite .svc__h2{ font-size:28px; margin:0 0 16px; color:var(--bv-blue) }
+    .microsite .svc__h2{ font-family:'Raleway',sans-serif; font-weight:500; font-size:28px; color:var(--bv-dark-blue); margin:0 0 16px }
     .microsite .svc__intro{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin:0 0 24px }
-    .microsite .svc__intro-col{ font-size:14px; line-height:1.6; color:var(--bv-grey) }
+    .microsite .svc__intro-col{ font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; color:var(--bv-navy) }
 
     .microsite .svc__grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--svc-gap) }
     .microsite .svc__card{ display:flex; flex-direction:column }
@@ -226,7 +227,7 @@
     .microsite .svc__grid.is-expanded .svc__card.is-hidden{ display:flex }
 
     .microsite .svc__more{ text-align:center; margin-top:16px }
-    .microsite .svc__more-btn{ display:inline-block; padding:8px 16px; border-radius:20px; border:1px solid #163558; color:#163558; text-decoration:none }
+    .microsite .svc__more-btn{ display:inline-block; padding:8px 16px; border-radius:20px; border:1px solid #163558; font-family:'Inter',sans-serif; font-size:14px; color:var(--bv-navy); text-decoration:none }
 
     @@media (max-width:1100px){ .microsite .svc__grid{ grid-template-columns:repeat(3,1fr) } }
     @@media (max-width:820px){
